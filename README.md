@@ -17,7 +17,12 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Run the api
+4. Create the database
+```sh
+python create_db.py
+```
+
+5. Run the service
 ```sh
 python api.py
 ```
