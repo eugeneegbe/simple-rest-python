@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import (Resource, Api, reqparse,
-                           fields, marshal_with, abort)
+                           fields, marshal_with)
 
 
 app = Flask(__name__)
@@ -47,8 +47,17 @@ class Users(Resource):
         return users, 201
 
 
-api.add_resource(Users, '/api/users/')
+class User(Resource):
+    @marshal_with(userFields)
+    def get(self, id):
+        user = UserModel.query.filter_by(id=id).first()
+        if not user: 
+            abort(400, "User not found")
+        return user, 200
 
+
+api.add_resource(Users, '/api/users/')
+api.add_resource(User, '/api/users/<int:id>')
 
 @app.route('/')
 def home():
